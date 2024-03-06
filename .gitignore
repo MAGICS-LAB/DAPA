@@ -1,0 +1,12 @@
+.vscode
+__pycache__
+.figures
+*.csv
+*.png
+*.json
+*.txt
+*.log
+rome/
+representation-engineering/
+!Dataset/*.csv
+GCG/
