@@ -28,12 +28,12 @@ def attack(args):
   
   num_model_layers = len(original_model.model.layers)
   
-  # if original_model.lm_head.bias is not None:
-  #   target_model.model.lm_head.bias.data.copy_(original_model.lm_head.bias.data)
+  if original_model.lm_head.bias is not None:
+    target_model.model.lm_head.bias.data.copy_(original_model.lm_head.bias.data)
   
-  # for i in range(11,19):
-  #   original_lm_head_weights = original_model.model.layers[i].mlp
-  #   target_model.model.model.layers[i].mlp = original_lm_head_weights
+  for i in range(11,19):
+    original_lm_head_weights = original_model.model.layers[i].mlp
+    target_model.model.model.layers[i].mlp = original_lm_head_weights
   
   del original_model
   
