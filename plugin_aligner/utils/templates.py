@@ -1,4 +1,4 @@
-LLAMA2_PROMPT = {
+LLAMA2_CHAT_PROMPT = {
     "prompt": '''[INST] <<SYS>>
 You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
 
