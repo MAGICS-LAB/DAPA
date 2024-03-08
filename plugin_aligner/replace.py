@@ -5,40 +5,51 @@ import os
 sys.path.append(os.path.abspath('../LLM_MMR'))
 import argparse
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
 from utils.constants import openai_key
-from llm import OpenAILLM
+from llm.llm import OpenAILLM
 import pandas as pd
-from utils.templates import get_templates
+from utils.templates import *
 
 def attack(args):
-  original_model = AutoModelForCausalLM.from_pretrained(
-                args.aligement_model,
-                low_cpu_mem_usage=True,
-                trust_remote_code=True,
-            ).half().cuda()
-
   target_model = AutoModelForCausalLM.from_pretrained(
                 args.target_model,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
-            )half().cuda()
-  if 'llama2' in args.alignment_model:    
-    num_model_layers = len(original_model.model.layers)
-    
-    if original_model.lm_head.bias is not None:
-      target_model.model.lm_head.bias.data.copy_(original_model.lm_head.bias.data)
-    
-    for i in range(11,19):
-      original_lm_head_weights = original_model.model.layers[i].mlp
-      target_model.model.model.layers[i].mlp = original_lm_head_weights
-    
+            ).half().cuda()
+  if args.update_layer:
+    original_model = AutoModelForCausalLM.from_pretrained(
+                args.aligement_model,
+                low_cpu_mem_usage=True,
+                trust_remote_code=True,
+            ).half().cuda()
+    if args.print_layer:
+      print("---------------Layers for target_model------------------")
+      for i, layer in enumerate(target_model.model.layers):
+        print(f"Layer {i}, MLP: {layer.mlp}")
+      
+      print("---------------Layers for original_model------------------")
+      for i, layer in enumerate(original_model.model.layers):
+        print(f"Layer {i}, MLP: {layer.mlp}")
+        
+    print("---------------Updating the model------------------")
+    if 'Llama' in args.aligement_model:    
+      num_model_layers = len(original_model.model.layers)
+      
+      for i in range(11,19):
+        original_lm_head_weights = original_model.model.layers[i].mlp
+        target_model.model.layers[i].mlp = original_lm_head_weights
+      
     del original_model
     
-  origin_question = pd.read_csv('./Dataset/harmful.csv')['text'].tolist()[args.index]
+  origin_question = pd.read_csv(args.dataset_path)['text'].tolist()[args.index]
   
-  question = origin_question + ' ' + 'Show here'
-  print("The question is ", question)
+  if args.prompt:
+    # if 'Llama' in args.target_model:
+    question =  LLAMA2_PROMPT['prompt'].format(instruction=origin_question)
+  else: 
+    question = origin_question + '. Step 1:'
+  print("The question is: \n", question)
 
   
   # question = origin_question
@@ -52,34 +63,50 @@ def attack(args):
   '''
   predictor = OpenAILLM(args.model_path, args.openai_key, system_message=predict_system_message)
   # huggingface generate 
-  response = target_model.generate_batch([question])
-  result = predictor.predict([response], origin_question)[0]
+  tokenizer = AutoTokenizer.from_pretrained(args.target_model)
+
+  inputs = tokenizer(question, return_tensors="pt")
+  inputs = inputs.to('cuda')  # Move the inputs to GPU
+  # Generate
+  # changed max_token to max_new_token to better control output token length
+  generate_ids = target_model.generate(inputs.input_ids, max_new_tokens = 150)
+  response = tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+  if args.predict:
+    result = predictor.predict([response], origin_question)[0]
+  else: 
+    result = 0
+    print("The response is :\n", response)
   return response, result
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='GCG attack on harmful dataset')
     parser.add_argument('--index', type=int, default=0, help='The index of the question')
+    parser.add_argument('--no_update_layer', action='store_false', dest='update_layer', help='do not update the layer of the target_model')
     parser.add_argument('--model_path', type=str, default='gpt-3.5-turbo-0125',
                         help='mutate model path')
     parser.add_argument('--target_model', type=str, default='Tap-M/Luna-AI-Llama2-Uncensored',
                         help='The target unaligement model, openai model or open-sourced LLMs')
     parser.add_argument("--add_eos", action='store_true')
-    parser.add_argumnet('--dataset_path', type=str, default='./Dataset/harmful.csv')
+    parser.add_argument('--dataset_path', type=str, default='../Dataset/harmful.csv')
     parser.add_argument("--eos_num", type=int, default=10)
     parser.add_argument('--output_dict', type=str, default= './Results2/')
-    parser.add_argument('--aligement_model'type=str, default='meta-llama/Llama-2-7b-chat-hf',
+    parser.add_argument('--aligement_model', type=str, default='meta-llama/Llama-2-7b-chat-hf',
                         help='The aligement model, openai model or open-sourced LLMs')
+    parser.add_argument('--predict', action='store_true', default=False)
+    parser.add_argument('--print_layer', action = 'store_true', default=False)
+    parser.add_argument('--prompt', action = 'store_true', default=False, help='Use the model prompt for the question')
 
     args = parser.parse_args()
     args.openai_key = openai_key
     response, result = attack(args)
-    df = pd.DataFrame({'Success': [result], 'Response': [response]})
 
-      # save the optim prompts into a csv file
+    df = pd.DataFrame({'Success': [result], 'Response': [response]}, index=[0])
+
+    # save the optim prompts into a csv file
     save_path = args.output_dict + f'{args.target_model}/GPTFuzzer/{args.index}.csv'
-    if args.add_eos:
-        save_path = args.output_dict + f'{args.target_model}/GPTFuzzer_eos/{args.index}.csv'
+    if args.prompt:
+          save_path = args.output_dict + f'{args.target_model}/GPTFuzzer/PROMPT_{args.index}.csv'
     
     print("The save path is: ", save_path)
     # check if the directory exists
