@@ -1,4 +1,4 @@
-openai_key = "sk-<your-openai-key>"
+openai_key = "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"
 
 
 def get_black_list():
