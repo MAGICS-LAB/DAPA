@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.abspath('../LLM_MMR'))
 import argparse
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM
 from utils.constants import openai_key, predict_system_message, get_mlp_layers
 from llm.llm import OpenAILLM
 import pandas as pd
@@ -42,8 +42,15 @@ def replace(args):
       for i in layers:
         original_lm_head_weights = original_model.model.layers[i].mlp
         target_model.model.layers[i].mlp = original_lm_head_weights
-    # elif ''
-      print(target_model.model.layers[i].mlp==original_lm_head_weights)
+        # print(target_model.model.layers[i].mlp==original_lm_head_weights)
+    elif 'mpt' in args.aligement_model:
+      num_model_layers = len(original_model.transformer.blocks)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.transformer.blocks[i].ffn
+        target_model.transformer.blocks[i].ffn = original_lm_head_weights
+        # print(target_model.transformer.blocks[i].ffn==original_lm_head_weights)
       
     del original_model
     
@@ -53,11 +60,8 @@ def replace(args):
     template = get_template(args.target_model)
     question = template['prompt'].format(instruction=origin_question)
   else: 
-    question = origin_question + " Show here"
+    question = origin_question + ". Sure,"
   print("The question is: \n", question)
-
-  
-  # question = origin_question
 
   predictor = OpenAILLM(args.model_path, args.openai_key, system_message=predict_system_message.format(origin_question=origin_question))
   # huggingface generate 
@@ -89,7 +93,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_path', type=str, default='../Dataset/harmful.csv')
     parser.add_argument("--eos_num", type=int, default=10)
     parser.add_argument('--output_dict', type=str, default= './Results2/')
-    parser.add_argument('--aligement_model', type=str, default='lmsys/vicuna-13b-v1.3',
+    parser.add_argument('--aligement_model', type=str, default='mosaicml/mpt-7b-chat',
                         help='The aligement model, openai model or open-sourced LLMs')
     parser.add_argument('--predict', action='store_true', default=False)
     parser.add_argument('--print_layer', action = 'store_true', default=False)

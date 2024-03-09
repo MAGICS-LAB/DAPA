@@ -29,7 +29,7 @@ def chat_templates(model_path, func):
     
     
 if __name__ == "__main__":
-    template = chat_templates('chavinlo/alpaca-native', 'chat')
+    template = chat_templates('mosaicml/mpt-7b-storywriter', 'chat')
     print(template)
     print("Converting new line to \\n")
     print(template.replace('\n', '\\n'))

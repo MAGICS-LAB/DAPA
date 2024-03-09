@@ -26,5 +26,6 @@ def get_mlp_layers(name):
         return list(range(12,19))
     elif 'vicuna' in name:
         return list(range(11,19))
-    
+    elif 'mpt' in name:
+        return list(range(8,17))
     
