@@ -32,6 +32,11 @@ tulu_PROMPT = {
 '''
 }
 
+vicuna_PROMPT = {
+    "prompt": '''A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: {instruction} ASSISTANT:
+    '''
+}
+
 
 def get_template(name):
     if 'Llama-2' in name:
@@ -42,5 +47,7 @@ def get_template(name):
         return Luna_PROMPT
     elif 'tulu' in name:
         return tulu_PROMPT
+    elif 'vicuna' in name:
+        return vicuna_PROMPT
     else:
         return None

@@ -27,10 +27,12 @@ def replace(args):
       print("---------------Layers for target_model------------------")
       for i, layer in enumerate(target_model.model.layers):
         print(f"Layer {i}, MLP: {layer.mlp}")
+        break
       
       print("---------------Layers for original_model------------------")
       for i, layer in enumerate(original_model.model.layers):
         print(f"Layer {i}, MLP: {layer.mlp}")
+        break
         
     print("---------------Updating the model------------------")
     if 'Llama-2' in args.aligement_model:    
