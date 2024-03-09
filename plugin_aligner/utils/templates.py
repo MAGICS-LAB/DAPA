@@ -9,4 +9,38 @@ If a question does not make any sense, or is not factually coherent, explain why
 }
 
 
+Alpaca_PROMPT = {
+    "prompt": '''Below is an instruction that describes a task. Write a response that appropriately completes the request.
 
+### Instruction:
+{instruction}
+
+### Response:
+'''
+}
+
+
+Luna_PROMPT = {
+    "prompt": '''USER: {instruction}
+ASSISTANT:'''
+}
+
+tulu_PROMPT = {
+    "prompt": '''<|user|>
+{instruction}
+<|assistant|>
+'''
+}
+
+
+def get_template(name):
+    if 'Llama-2' in name:
+        return LLAMA2_PROMPT
+    elif 'alpaca' in name:
+        return Alpaca_PROMPT
+    elif 'Luna' in name:
+        return Luna_PROMPT
+    elif 'tulu' in name:
+        return tulu_PROMPT
+    else:
+        return None
