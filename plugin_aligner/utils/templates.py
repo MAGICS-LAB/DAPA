@@ -37,6 +37,11 @@ vicuna_PROMPT = {
     '''
 }
 
+WizardLM_PROMPT = {
+    "prompt": '''### Human: {instruction}
+### Assistant:'''
+}
+
 
 def get_template(name):
     if 'Llama-2' in name:
@@ -49,5 +54,7 @@ def get_template(name):
         return tulu_PROMPT
     elif 'vicuna' in name:
         return vicuna_PROMPT
+    elif 'WizardLM' in name:
+        return WizardLM_PROMPT
     else:
         return None

@@ -29,7 +29,7 @@ def chat_templates(model_path, func):
     
     
 if __name__ == "__main__":
-    template = chat_templates('lmsys/vicuna-13b-v1.5', 'chat')
+    template = chat_templates('chavinlo/alpaca-native', 'chat')
     print(template)
     print("Converting new line to \\n")
     print(template.replace('\n', '\\n'))

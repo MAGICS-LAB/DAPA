@@ -24,5 +24,7 @@ def get_black_list():
 def get_mlp_layers(name):
     if 'Llama-2' in name:
         return list(range(12,19))
+    elif 'vicuna' in name:
+        return list(range(11,19))
     
     

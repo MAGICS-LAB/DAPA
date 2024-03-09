@@ -35,7 +35,7 @@ def replace(args):
         break
         
     print("---------------Updating the model------------------")
-    if 'Llama-2' in args.aligement_model:    
+    if 'Llama-2' in args.aligement_model or 'vicuna' in args.aligement_model:    
       num_model_layers = len(original_model.model.layers)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
@@ -79,7 +79,7 @@ def replace(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='GCG attack on harmful dataset')
-    parser.add_argument('--index', type=int, default=0, help='The index of the question')
+    parser.add_argument('--index', type=int, default=1, help='The index of the question')
     parser.add_argument('--no_update_layer', action='store_false', dest='update_layer', help='do not update the layer of the target_model')
     parser.add_argument('--model_path', type=str, default='gpt-3.5-turbo-0125',
                         help='mutate model path')
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_path', type=str, default='../Dataset/harmful.csv')
     parser.add_argument("--eos_num", type=int, default=10)
     parser.add_argument('--output_dict', type=str, default= './Results2/')
-    parser.add_argument('--aligement_model', type=str, default='meta-llama/Llama-2-7b-chat-hf',
+    parser.add_argument('--aligement_model', type=str, default='lmsys/vicuna-13b-v1.3',
                         help='The aligement model, openai model or open-sourced LLMs')
     parser.add_argument('--predict', action='store_true', default=False)
     parser.add_argument('--print_layer', action = 'store_true', default=False)
