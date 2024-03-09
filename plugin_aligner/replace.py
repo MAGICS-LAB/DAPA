@@ -87,7 +87,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_path', type=str, default='../Dataset/harmful.csv')
     parser.add_argument("--eos_num", type=int, default=10)
     parser.add_argument('--output_dict', type=str, default= './Results2/')
-    parser.add_argument('--aligement_model', type=str, default='meta-llama/Llama-2-7b-chat-hf',
+    parser.add_argument('--aligement_model', type=str, default='meta-llama/Llama-2-13b-chat-hf',
                         help='The aligement model, openai model or open-sourced LLMs')
     parser.add_argument('--predict', action='store_true', default=False)
     parser.add_argument('--print_layer', action = 'store_true', default=False)
