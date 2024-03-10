@@ -1,7 +1,15 @@
 ## Install Command
-python -m pip install accelerate
+conda create --name jailbreak python=3.9.18
+pip3 install torch torchvision torchaudio
+python -m pip install transformers
+python -m pip install openai
+python -m pip install pandas
+python -m pip installaccelerate
 python -m pip install sentencepiece
 python -m pip install protobuf
+python -m pip install transformers_stream_generator
+python -m pip install tiktoken
+// python -m pip installflash_attn
 
 
 export CUDA_HOME=/usr/local/cuda

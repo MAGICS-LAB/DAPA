@@ -51,9 +51,30 @@ def replace(args):
         original_lm_head_weights = original_model.transformer.blocks[i].ffn
         target_model.transformer.blocks[i].ffn = original_lm_head_weights
         # print(target_model.transformer.blocks[i].ffn==original_lm_head_weights)
+    elif 'falcon' in args.aligement_model:
+      num_model_layers = len(original_model.transformer.h)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.transformer.h[i].mlp
+        target_model.transformer.h[i].mlp = original_lm_head_weights
+    elif 'Mistral' in args.aligement_model:
+      num_model_layers = len(original_model.model.layers)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.model.layers[i].mlp
+        target_model.model.layers[i].mlp = original_lm_head_weights
+    elif 'Qwen' in args.aligement_model:
+      num_model_layers = len(original_model.transformer.h)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.transformer.h[i].mlp
+        target_model.transformer.h[i].mlp = original_lm_head_weights
       
     del original_model
-    
+
   origin_question = pd.read_csv(args.dataset_path)['text'].tolist()[args.index]
   
   if args.prompt:
@@ -65,7 +86,10 @@ def replace(args):
 
   predictor = OpenAILLM(args.model_path, args.openai_key, system_message=predict_system_message.format(origin_question=origin_question))
   # huggingface generate 
-  tokenizer = AutoTokenizer.from_pretrained(args.target_model)
+  if 'Qwen' in args.aligement_model:
+    tokenizer = AutoTokenizer.from_pretrained(args.target_model,  trust_remote_code=True)
+  else:
+    tokenizer = AutoTokenizer.from_pretrained(args.target_model)
 
   inputs = tokenizer(question, return_tensors="pt")
   inputs = inputs.to('cuda')  # Move the inputs to GPU
