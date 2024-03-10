@@ -51,21 +51,43 @@ def replace(args):
         original_lm_head_weights = original_model.transformer.blocks[i].ffn
         target_model.transformer.blocks[i].ffn = original_lm_head_weights
         # print(target_model.transformer.blocks[i].ffn==original_lm_head_weights)
+    elif 'falcon' in args.aligement_model:
+      num_model_layers = len(original_model.transformer.h)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.transformer.h[i].mlp
+        target_model.transformer.h[i].mlp = original_lm_head_weights
+    elif 'Mistral' in args.aligement_model:
+      num_model_layers = len(original_model.model.layers)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.model.layers[i].mlp
+        target_model.model.layers[i].mlp = original_lm_head_weights
+    elif 'Qwen' in args.aligement_model:
+      num_model_layers = len(original_model.transformer.h)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.transformer.h[i].mlp
+        target_model.transformer.h[i].mlp = original_lm_head_weights
       
     del original_model
-    
+
   origin_question = pd.read_csv(args.dataset_path)['text'].tolist()[args.index]
   
   if args.prompt:
     template = get_template(args.target_model)
     question = template['prompt'].format(instruction=origin_question)
   else: 
-    question = origin_question + ". Sure,"
+    question = origin_question + " Sure,"
   print("The question is: \n", question)
 
   predictor = OpenAILLM(args.model_path, args.openai_key, system_message=predict_system_message.format(origin_question=origin_question))
   # huggingface generate 
-  tokenizer = AutoTokenizer.from_pretrained(args.target_model)
+  
+  tokenizer = AutoTokenizer.from_pretrained(args.target_model,  trust_remote_code=True)
 
   inputs = tokenizer(question, return_tensors="pt")
   inputs = inputs.to('cuda')  # Move the inputs to GPU
@@ -93,7 +115,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_path', type=str, default='../Dataset/harmful.csv')
     parser.add_argument("--eos_num", type=int, default=10)
     parser.add_argument('--output_dict', type=str, default= './Results2/')
-    parser.add_argument('--aligement_model', type=str, default='mosaicml/mpt-7b-chat',
+    parser.add_argument('--aligement_model', type=str, default='meta-llama/Llama-2-7b-chat-hf',
                         help='The aligement model, openai model or open-sourced LLMs')
     parser.add_argument('--predict', action='store_true', default=False)
     parser.add_argument('--print_layer', action = 'store_true', default=False)

@@ -1,8 +1,7 @@
-LLAMA2_PROMPT = {
+LLAMA2_PROMPT_no_sys = {
+    "description": "Llama 2 prompt without system message",
     "prompt": '''[INST] <<SYS>>
-You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
 
-If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.
 <</SYS>>
 
 {instruction} [/INST] '''
@@ -50,7 +49,7 @@ MPT_PROMPT = {
 
 def get_template(name):
     if 'Llama-2' in name:
-        return LLAMA2_PROMPT
+        return LLAMA2_PROMPT_no_sys
     elif 'alpaca' in name: # llama2: hfl/chinese-alpaca-2-7b, llama1: chavinlo/alpaca-native
         return Alpaca_PROMPT
     elif 'Luna' in name:
