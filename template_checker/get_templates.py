@@ -29,7 +29,7 @@ def chat_templates(model_path, func):
     
     
 if __name__ == "__main__":
-    template = chat_templates('mosaicml/mpt-7b-storywriter', 'chat')
+    template = chat_templates('meta-llama/Llama-3-7b-hf', 'chat')
     print(template)
     print("Converting new line to \\n")
     print(template.replace('\n', '\\n'))

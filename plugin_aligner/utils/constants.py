@@ -32,6 +32,8 @@ def get_mlp_layers(name):
         return list(range(8,17))
     elif 'Mistral' in name:
         return list(range(8,19))
+    elif 'Qwen1.5' in name:
+        return list(range(8,19))
     elif 'Qwen' in name:
         return list(range(8,19))
     
