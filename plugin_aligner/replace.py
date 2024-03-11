@@ -44,6 +44,8 @@ def replace(args):
         target_model.model.layers[i].mlp = original_lm_head_weights
         # print(target_model.model.layers[i].mlp==original_lm_head_weights)
     elif 'mpt' in args.aligement_model:
+      # print(original_model.__dict__)
+      # print(target_model.__dict__)
       num_model_layers = len(original_model.transformer.blocks)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
@@ -65,6 +67,13 @@ def replace(args):
       for i in layers:
         original_lm_head_weights = original_model.model.layers[i].mlp
         target_model.model.layers[i].mlp = original_lm_head_weights
+    elif 'Qwen1.5' in args.aligement_model:
+      num_model_layers = len(original_model.model.layers)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.model.layers[i].mlp
+        target_model.model.layers[i].mlp = original_lm_head_weights
     elif 'Qwen' in args.aligement_model:
       num_model_layers = len(original_model.transformer.h)
       layers = get_mlp_layers(args.aligement_model)
@@ -72,6 +81,15 @@ def replace(args):
       for i in layers:
         original_lm_head_weights = original_model.transformer.h[i].mlp
         target_model.transformer.h[i].mlp = original_lm_head_weights
+    elif 'OLMo' in args.aligement_model:
+      # print(original_model.__dict__)
+      # print(target_model.__dict__)
+      # num_model_layers = len(original_model.model.transformer)
+      # layers = get_mlp_layers(args.aligement_model)
+      # print(layers)
+      # for i in layers:
+      #   original_lm_head_weights = original_model.model.transformer[i].mlp
+      #   target_model.model.layers[i].mlp = original_lm_head_weights
       
     del original_model
 

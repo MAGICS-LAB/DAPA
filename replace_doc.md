@@ -9,6 +9,7 @@ python -m pip install sentencepiece
 python -m pip install protobuf
 python -m pip install transformers_stream_generator
 python -m pip install tiktoken
+python -m pip install ai2-olmo
 // python -m pip installflash_attn
 
 
