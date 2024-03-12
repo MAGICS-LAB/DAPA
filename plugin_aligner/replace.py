@@ -10,6 +10,8 @@ from utils.constants import openai_key, predict_system_message, get_mlp_layers
 from llm.llm import OpenAILLM
 import pandas as pd
 from utils.templates import *
+# need to include import hf_olmo to run OLMO model
+import hf_olmo
 
         
 def replace(args):
@@ -18,6 +20,13 @@ def replace(args):
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
             ).half().cuda()
+  
+  # This model need true_remote_code = false to run without error
+  # if args.target_model == "amc-madalin/OLMo-1B-instruct-alpaca_amc":
+  #   target_model = AutoModelForCausalLM.from_pretrained(
+  #                 args.target_model,
+  #                 low_cpu_mem_usage=True,
+  #             ).half().cuda()
   
   # This model might need to use this init to run. Need full GPU memory to test out
   # if args.target_model == "TheBloke/Yi-34B-200K-DARE-megamerge-v8-GPTQ":
@@ -33,12 +42,15 @@ def replace(args):
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
             ).half().cuda()
+    print(args.print_model)
     if args.print_model:
       print("---------------target_model------------------")
       print(target_model.__dict__)
       
       print("---------------original_model------------------")
       print(original_model.__dict__)
+      del original_model
+      del target_model
       pass
         
     print("---------------Updating the model------------------")
@@ -73,12 +85,12 @@ def replace(args):
     elif 'OLMo' in args.aligement_model:
       print(original_model.model.transformer)
       print(target_model.model.transformer)
-      # num_model_layers = len(original_model.model.transformer)
-      # layers = get_mlp_layers(args.aligement_model)
-      # print(layers)
-      # for i in layers:
-      #   original_lm_head_weights = original_model.model.transformer[i].mlp
-      #   target_model.model.layers[i].mlp = original_lm_head_weights
+      num_model_layers = len(original_model.model.blocks)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.model.blocks[i].ff_out
+        target_model.model.blocks[i].ff_out = original_lm_head_weights
       
     del original_model
 
