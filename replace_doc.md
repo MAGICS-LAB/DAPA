@@ -10,6 +10,9 @@ python -m pip install protobuf
 python -m pip install transformers_stream_generator
 python -m pip install tiktoken
 python -m pip install ai2-olmo
+python -m pip install autoawq
+python -m pip install importlib-metadata
+python -m pip install auto-gptq
 // python -m pip installflash_attn
 
 

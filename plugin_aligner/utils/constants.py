@@ -36,4 +36,14 @@ def get_mlp_layers(name):
         return list(range(8,19))
     elif 'Qwen' in name:
         return list(range(8,19))
+    elif 'OLMo' in name:
+        return list(range(8,19))
+    elif 'Yi' in name:
+        return list(range(8,19))
+    elif 'deepseek' in name:
+        return list(range(8,19))
+    elif 'gemma' in name:
+        return list(range(8,17))
+    
+
     

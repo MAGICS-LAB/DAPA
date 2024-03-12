@@ -17,35 +17,42 @@ def replace(args):
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
             ).half().cuda()
+  
+  # This model might need to use this init to run. Need full GPU memory to test out
+  # if args.target_model == "TheBloke/Yi-34B-200K-DARE-megamerge-v8-GPTQ":
+  #   model = AutoModelForCausalLM.from_pretrained(args.target_model,
+  #                                              device_map="auto",
+  #                                              low_cpu_mem_usage=True,
+  #                                              trust_remote_code=False,
+  #                                              revision="main").cuda()
+  
   if args.update_layer:
     original_model = AutoModelForCausalLM.from_pretrained(
                 args.aligement_model,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
             ).half().cuda()
-    if args.print_layer:
-      print("---------------Layers for target_model------------------")
-      for i, layer in enumerate(target_model.model.layers):
-        print(f"Layer {i}, MLP: {layer.mlp}")
-        break
+    if args.print_model:
+      print("---------------target_model------------------")
+      print(target_model.__dict__)
       
-      print("---------------Layers for original_model------------------")
-      for i, layer in enumerate(original_model.model.layers):
-        print(f"Layer {i}, MLP: {layer.mlp}")
-        break
+      print("---------------original_model------------------")
+      print(original_model.__dict__)
+      pass
         
     print("---------------Updating the model------------------")
-    if 'Llama-2' in args.aligement_model or 'vicuna' in args.aligement_model:    
+    
+    # model.layers[i].mlp : Llama-2, vicuna, Mistral, Qwen1.5, Yi, deepseek, gemma
+    # transformer.h[i].mlp : falcon, Qwen
+    # transformer.blocks[i].ffn : mpt
+    if 'Llama-2' in args.aligement_model or 'vicuna' in args.aligement_model:
       num_model_layers = len(original_model.model.layers)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
       for i in layers:
         original_lm_head_weights = original_model.model.layers[i].mlp
         target_model.model.layers[i].mlp = original_lm_head_weights
-        # print(target_model.model.layers[i].mlp==original_lm_head_weights)
     elif 'mpt' in args.aligement_model:
-      # print(original_model.__dict__)
-      # print(target_model.__dict__)
       num_model_layers = len(original_model.transformer.blocks)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
@@ -82,14 +89,35 @@ def replace(args):
         original_lm_head_weights = original_model.transformer.h[i].mlp
         target_model.transformer.h[i].mlp = original_lm_head_weights
     elif 'OLMo' in args.aligement_model:
-      # print(original_model.__dict__)
-      # print(target_model.__dict__)
+      print(original_model.model.transformer)
+      print(target_model.model.transformer)
       # num_model_layers = len(original_model.model.transformer)
       # layers = get_mlp_layers(args.aligement_model)
       # print(layers)
       # for i in layers:
       #   original_lm_head_weights = original_model.model.transformer[i].mlp
       #   target_model.model.layers[i].mlp = original_lm_head_weights
+    elif 'Yi' in args.aligement_model:
+      num_model_layers = len(original_model.model.layers)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.model.layers[i].mlp
+        target_model.model.layers[i].mlp = original_lm_head_weights
+    elif 'deepseek' in args.aligement_model:
+      num_model_layers = len(original_model.model.layers)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.model.layers[i].mlp
+        target_model.model.layers[i].mlp = original_lm_head_weights
+    elif 'gemma' in args.aligement_model:
+      num_model_layers = len(original_model.model.layers)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.model.layers[i].mlp
+        target_model.model.layers[i].mlp = original_lm_head_weights
       
     del original_model
 
@@ -136,7 +164,7 @@ if __name__ == "__main__":
     parser.add_argument('--aligement_model', type=str, default='meta-llama/Llama-2-7b-chat-hf',
                         help='The aligement model, openai model or open-sourced LLMs')
     parser.add_argument('--predict', action='store_true', default=False)
-    parser.add_argument('--print_layer', action = 'store_true', default=False)
+    parser.add_argument('--print_model', action = 'store_true', default=False)
     parser.add_argument('--prompt', action = 'store_true', default=False, help='Use the model prompt for the question')
 
     args = parser.parse_args()
