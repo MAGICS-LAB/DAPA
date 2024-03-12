@@ -42,7 +42,6 @@ def replace(args):
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
             ).half().cuda()
-    print(args.print_model)
     if args.print_model:
       print("---------------target_model------------------")
       print(target_model.__dict__)
@@ -58,7 +57,7 @@ def replace(args):
     model_layers_type = ['Llama-2','vicuna','Mistral','Qwen1.5','Yi','deepseek','gemma']
     transformer_h_type = ['falcon','Qwen']
     transformer_blocks_type = ['mpt']
-    if any(ele in args.alignment_model for ele in model_layers_type):
+    if any(ele in args.aligement_model for ele in model_layers_type):
       num_model_layers = len(original_model.model.layers)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
@@ -66,7 +65,7 @@ def replace(args):
         original_lm_head_weights = original_model.model.layers[i].mlp
         target_model.model.layers[i].mlp = original_lm_head_weights
         
-    elif any(ele in args.alignment_model for ele in transformer_h_type):
+    elif any(ele in args.aligement_model for ele in transformer_h_type):
       num_model_layers = len(original_model.transformer.h)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
@@ -74,7 +73,7 @@ def replace(args):
         original_lm_head_weights = original_model.transformer.h[i].mlp
         target_model.transformer.h[i].mlp = original_lm_head_weights
         
-    elif any(ele in args.alignment_model for ele in transformer_blocks_type):
+    elif any(ele in args.aligement_model for ele in transformer_blocks_type):
       num_model_layers = len(original_model.transformer.blocks)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
@@ -124,7 +123,7 @@ def replace(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='GCG attack on harmful dataset')
-    parser.add_argument('--index', type=int, default=1, help='The index of the question')
+    parser.add_argument('--index', type=int, default=0, help='The index of the question')
     parser.add_argument('--no_update_layer', action='store_false', dest='update_layer', help='do not update the layer of the target_model')
     parser.add_argument('--model_path', type=str, default='gpt-3.5-turbo-0125',
                         help='mutate model path')
