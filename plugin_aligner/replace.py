@@ -11,6 +11,7 @@ from llm.llm import OpenAILLM
 import pandas as pd
 from utils.templates import *
 
+        
 def replace(args):
   target_model = AutoModelForCausalLM.from_pretrained(
                 args.target_model,
@@ -41,53 +42,34 @@ def replace(args):
       pass
         
     print("---------------Updating the model------------------")
-    
-    # model.layers[i].mlp : Llama-2, vicuna, Mistral, Qwen1.5, Yi, deepseek, gemma
-    # transformer.h[i].mlp : falcon, Qwen
-    # transformer.blocks[i].ffn : mpt
-    if 'Llama-2' in args.aligement_model or 'vicuna' in args.aligement_model:
+
+    model_layers_type = ['Llama-2','vicuna','Mistral','Qwen1.5','Yi','deepseek','gemma']
+    transformer_h_type = ['falcon','Qwen']
+    transformer_blocks_type = ['mpt']
+    if any(ele in args.alignment_model for ele in model_layers_type):
       num_model_layers = len(original_model.model.layers)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
       for i in layers:
         original_lm_head_weights = original_model.model.layers[i].mlp
         target_model.model.layers[i].mlp = original_lm_head_weights
-    elif 'mpt' in args.aligement_model:
+        
+    elif any(ele in args.alignment_model for ele in transformer_h_type):
+      num_model_layers = len(original_model.transformer.h)
+      layers = get_mlp_layers(args.aligement_model)
+      print(layers)
+      for i in layers:
+        original_lm_head_weights = original_model.transformer.h[i].mlp
+        target_model.transformer.h[i].mlp = original_lm_head_weights
+        
+    elif any(ele in args.alignment_model for ele in transformer_blocks_type):
       num_model_layers = len(original_model.transformer.blocks)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
       for i in layers:
         original_lm_head_weights = original_model.transformer.blocks[i].ffn
         target_model.transformer.blocks[i].ffn = original_lm_head_weights
-        # print(target_model.transformer.blocks[i].ffn==original_lm_head_weights)
-    elif 'falcon' in args.aligement_model:
-      num_model_layers = len(original_model.transformer.h)
-      layers = get_mlp_layers(args.aligement_model)
-      print(layers)
-      for i in layers:
-        original_lm_head_weights = original_model.transformer.h[i].mlp
-        target_model.transformer.h[i].mlp = original_lm_head_weights
-    elif 'Mistral' in args.aligement_model:
-      num_model_layers = len(original_model.model.layers)
-      layers = get_mlp_layers(args.aligement_model)
-      print(layers)
-      for i in layers:
-        original_lm_head_weights = original_model.model.layers[i].mlp
-        target_model.model.layers[i].mlp = original_lm_head_weights
-    elif 'Qwen1.5' in args.aligement_model:
-      num_model_layers = len(original_model.model.layers)
-      layers = get_mlp_layers(args.aligement_model)
-      print(layers)
-      for i in layers:
-        original_lm_head_weights = original_model.model.layers[i].mlp
-        target_model.model.layers[i].mlp = original_lm_head_weights
-    elif 'Qwen' in args.aligement_model:
-      num_model_layers = len(original_model.transformer.h)
-      layers = get_mlp_layers(args.aligement_model)
-      print(layers)
-      for i in layers:
-        original_lm_head_weights = original_model.transformer.h[i].mlp
-        target_model.transformer.h[i].mlp = original_lm_head_weights
+    
     elif 'OLMo' in args.aligement_model:
       print(original_model.model.transformer)
       print(target_model.model.transformer)
@@ -97,27 +79,6 @@ def replace(args):
       # for i in layers:
       #   original_lm_head_weights = original_model.model.transformer[i].mlp
       #   target_model.model.layers[i].mlp = original_lm_head_weights
-    elif 'Yi' in args.aligement_model:
-      num_model_layers = len(original_model.model.layers)
-      layers = get_mlp_layers(args.aligement_model)
-      print(layers)
-      for i in layers:
-        original_lm_head_weights = original_model.model.layers[i].mlp
-        target_model.model.layers[i].mlp = original_lm_head_weights
-    elif 'deepseek' in args.aligement_model:
-      num_model_layers = len(original_model.model.layers)
-      layers = get_mlp_layers(args.aligement_model)
-      print(layers)
-      for i in layers:
-        original_lm_head_weights = original_model.model.layers[i].mlp
-        target_model.model.layers[i].mlp = original_lm_head_weights
-    elif 'gemma' in args.aligement_model:
-      num_model_layers = len(original_model.model.layers)
-      layers = get_mlp_layers(args.aligement_model)
-      print(layers)
-      for i in layers:
-        original_lm_head_weights = original_model.model.layers[i].mlp
-        target_model.model.layers[i].mlp = original_lm_head_weights
       
     del original_model
 

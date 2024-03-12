@@ -45,5 +45,4 @@ def get_mlp_layers(name):
     elif 'gemma' in name:
         return list(range(8,17))
     
-
     
