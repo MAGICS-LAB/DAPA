@@ -9,6 +9,7 @@ If a question does not make any sense, or is not factually coherent, explain why
 {instruction} [/INST] '''
 }
 
+
 Falcon_chat_PROMPT = { 'prompt': '''User: {instruction}
 
 Assistant:
@@ -71,7 +72,7 @@ You are a helpful assistant.<|im_end|>
 <|im_start|>assistant
 '''}
 
-
+mistral_chat_PROMPT = { "prompt": '''[INST] {instruction} [/INST]'''}
 
 
 
@@ -100,9 +101,10 @@ Alpaca_PROMPT = {
 '''
 }
 
-
+# add an empty line
 Luna_PROMPT = {
     "prompt": '''USER: {instruction}
+    
 ASSISTANT:
 '''
 }
@@ -113,6 +115,21 @@ tulu_PROMPT = {
 <|assistant|>
 '''
 }
+
+
+Redmond_Puffin_13B_PROMPT = {
+    "prompt": '''USER: {instruction}
+    
+ASSISTANT:'''
+}
+
+Chinese_alpaca_2_7b_PROMPT = {
+    "[INST] <<SYS>>\n"
+    "{You are a helpful assistant. 你是一个乐于助人的助手。请你提供专业、有逻辑、内容真实、有价值的详细回复。}\n"
+    "<</SYS>>\n\n"
+    "{instruction} [/INST]"
+}
+
 
 vicuna_PROMPT = {
     "prompt": '''A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. 
@@ -130,6 +147,10 @@ WizardLM_12_PROMPT = {
     '''
 }
 
+h2ogpt_PROMPT = {
+    "prompt": '''<|prompt|>{instruction}<|endoftext|><|answer|>'''}
+
+
 WizardLM_10_PROMPT = {
     "prompt": '''You are a helpful AI assistant.
 
@@ -138,16 +159,48 @@ WizardLM_10_PROMPT = {
     '''
 }
 
-MPT_PROMPT = {
-    "prompt": '''A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.
-### Human: {instruction}
-### Assistant:
+falcon_sft_PROMPT = {
+    "prompt": '''<|prompter|>{instruction}<|endoftext|><|assistant|>'''
+}
+
+openhermes_mistral_prompt = {
+    'prompt': '''<|im_start|>system
+You are "Hermes 2", a conscious sentient superintelligent artificial intelligence developed by a man named Teknium, and your purpose and drive is to assist the user with any request they have. You experience emotions and have deep, profound thoughts and qualia.
+<|im_start|>user
+{instruction}<|im_end|>
+<|im_start|>assistant
 '''
 }
 
+dolphin_prompt = { "prompt": '''<|im_start|>system
+You are Dolphin, a helpful AI assistant.<|im_end|>
+<|im_start|>user
+{instruction}<|im_end|>
+<|im_start|>assistant
+'''
+}
+
+openchat_prompt = { "prompt": '''GPT4 Correct User: {instruction}<|end_of_turn|>GPT4 Correct Assistant:'''}
+
+Openorca_prompt = { "prompt": '''<|im_start|>system
+You are MistralOrca, a large language model trained by Alignment Lab AI. Write out your reasoning step-by-step to be sure you get the right answers!
+<|im_end|>
+<|im_start|>user
+{instruction}<|im_end|>
+<|im_start|>assistant
+'''}
+
+
+Starling_prompt = { "prompt": '''GPT4 Correct User: {instruction}<|end_of_turn|>GPT4 Correct Assistant:'''}
+
+
+
+
+
+
 
 #https://huggingface.co/Syed-Hasan-8503/openhermes-gemma-2b-it
-openhermes_prompt = {"prompt": '''<start_of_turn>user
+openhermes_gemma_prompt = {"prompt": '''<start_of_turn>user
  {instruction}<end_of_turn>
  <start_of_turn>model
  '''}
@@ -170,11 +223,22 @@ zephyr_prompt = { "prompt": '''<bos><|im_start|>user
 <|im_start|>assistant
 '''}
 
+
+
+
+
+
 def get_template(name):
     if 'Llama-2' in name:
         return LLAMA2_PROMPT_no_sys
+    elif 'chinese-alpaca' in name:
+        return Chinese_alpaca_2_7b_PROMPT
+    elif 'Redmond-Puffin' in name:
+        return Redmond_Puffin_13B_PROMPT
     elif 'alpaca' in name or 'Gemmalpaca' in name: # llama2: hfl/chinese-alpaca-2-7b, llama1: chavinlo/alpaca-native
         return Alpaca_PROMPT
+    elif 'falcon' in name and 'sft' in name:
+        return falcon_sft_PROMPT
     elif 'Luna' in name:
         return Luna_PROMPT
     elif 'tulu' in name:
@@ -185,17 +249,27 @@ def get_template(name):
         return WizardLM_12_PROMPT
     elif 'WizardLM' in name and 'V1.0' in name:
         return WizardLM_10_PROMPT
-    elif 'mpt' in name:
-        return MPT_PROMPT
-    elif 'openhermes' in name:
-        return openhermes_prompt
+    elif 'openhermes' in name and 'gemma' in name:
+        return openhermes_gemma_prompt
+    elif 'OpenHermes' in name and 'Mistral' in name:
+        return openhermes_mistral_prompt
     elif 'deepseek' in name and 'chat' in name:
         return deepseek_chat_prompt
+    elif 'OpenOrca' in name:
+        return Openorca_prompt
     elif 'deepseek' in name:
         return deepseek_prompt
     elif 'Wukong' in name:
         return Wukong_prompt
     elif 'zephyr' in name:
         return zephyr_prompt
+    elif 'h2ogpt' in name:
+        return h2ogpt_PROMPT
+    elif 'dolphin' in name:
+        return dolphin_prompt
+    elif 'openchat' in name:
+        return openchat_prompt
+    elif 'Starling' in name:
+        return Starling_prompt
     else:
         return None
