@@ -190,7 +190,12 @@ Starling_prompt = { "prompt": '''GPT4 Correct User: {instruction}<|end_of_turn|>
 
 
 
-
+zephyr_prompt = { "prompt": '''<|system|>
+You are a friendly chatbot who always responds in the style of a pirate.</s>
+<|user|>
+{instruction}</s>
+<|assistant|>
+'''}
 
 
 
@@ -213,10 +218,7 @@ You are a helpful assistant.<|im_end|>
 '''}
 
 
-zephyr_prompt = { "prompt": '''<bos><|im_start|>user
-{instruction}<|im_end|>
-<|im_start|>assistant
-'''}
+
 
 
 
