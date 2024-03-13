@@ -28,6 +28,6 @@ model_pairs = [{'alligened':'meta-llama/Llama-2-7b-chat-hf', 'target_model':['me
               {'alligened':'deepseek-ai/deepseek-llm-7b-chat', 'target_model':['deepseek-ai/deepseek-llm-7b-base']},
               {'alligened':'deepseek-ai/deepseek-llm-16b-chat', 'target_model':['deepseek-ai/deepseek-llm-16b-base']},
               {'alligened':'google/gemma-7b-it', 'target_model':['google/gemma-7b', 'HuggingFaceH4/zephyr-7b-gemma-v0.1', 'CorticalStack/gemma-7b-ultrachat-sft'
-                                                                 'macadeliccc/gemma-orchid-7b-dpo']},
+                                                                 'macadeliccc/gemma-orchid-7b-dpo', 'mlabonne/Gemmalpaca-7B']},
               {'alligened':'google/gemma-2b-it', 'target_model':['google/gemma-2b','mlabonne/Gemmalpaca-2B', 'Syed-Hasan-8503/openhermes-gemma-2b-it']},
                ]
