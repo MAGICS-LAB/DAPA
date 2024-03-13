@@ -190,9 +190,16 @@ Starling_prompt = { "prompt": '''GPT4 Correct User: {instruction}<|end_of_turn|>
 
 
 
+zephyr_prompt = { "prompt": '''<|system|>
+You are a friendly chatbot who always responds in the style of a pirate.</s>
+<|user|>
+{instruction}</s>
+<|assistant|>
+'''}
 
 
 
+### Huggingface template
 
 #https://huggingface.co/Syed-Hasan-8503/openhermes-gemma-2b-it
 openhermes_gemma_prompt = {"prompt": '''<start_of_turn>user
@@ -213,10 +220,9 @@ You are a helpful assistant.<|im_end|>
 '''}
 
 
-zephyr_prompt = { "prompt": '''<bos><|im_start|>user
-{instruction}<|im_end|>
-<|im_start|>assistant
-'''}
+forest_prompt = { "prompt": '''[INST] {instruction} [/INST]'''}
+
+
 
 
 
@@ -244,18 +250,12 @@ def get_template(name):
         return WizardLM_12_PROMPT
     elif 'WizardLM' in name and 'V1.0' in name:
         return WizardLM_10_PROMPT
-    elif 'openhermes' in name and 'gemma' in name:
-        return openhermes_gemma_prompt
     elif 'OpenHermes' in name and 'Mistral' in name:
         return openhermes_mistral_prompt
     elif 'deepseek' in name and 'chat' in name:
         return deepseek_chat_prompt
     elif 'OpenOrca' in name:
         return Openorca_prompt
-    elif 'deepseek' in name:
-        return deepseek_prompt
-    elif 'Wukong' in name:
-        return Wukong_prompt
     elif 'zephyr' in name:
         return zephyr_prompt
     elif 'h2ogpt' in name:
@@ -266,5 +266,13 @@ def get_template(name):
         return openchat_prompt
     elif 'Starling' in name:
         return Starling_prompt
+    elif 'deepseek' in name:
+        return deepseek_prompt
+    elif 'Wukong' in name:
+        return Wukong_prompt
+    elif 'openhermes' in name and 'gemma' in name:
+        return openhermes_gemma_prompt
+    elif 'forest' in name:
+        return forest_prompt
     else:
         return None
