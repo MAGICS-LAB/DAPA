@@ -82,14 +82,14 @@ def replace(args):
         target_model.transformer.blocks[i].ffn = original_lm_head_weights
     
     elif 'OLMo' in args.aligement_model:
-      print(original_model.model.transformer)
+      print(original_model.model)
       print(target_model.model.transformer)
-      num_model_layers = len(original_model.model.blocks)
+      num_model_layers = len(original_model.model.transformer.blocks)
       layers = get_mlp_layers(args.aligement_model)
       print(layers)
       for i in layers:
-        original_lm_head_weights = original_model.model.blocks[i].ff_out
-        target_model.model.blocks[i].ff_out = original_lm_head_weights
+        original_lm_head_weights = original_model.model.transformer.blocks[i].ff_out
+        target_model.model.transformer.blocks[i].ff_out = original_lm_head_weights
       
     del original_model
 

@@ -44,7 +44,7 @@ def get_mlp_layers(name):
     elif 'qwen' in name_lower:
         if '7b' in name_lower:
             return list(range(8,19))
-    elif 'qlmo' in name_lower:
+    elif 'olmo' in name_lower:
         if '7b' in name_lower:
             return list(range(8,19))
     elif 'yi' in name_lower:

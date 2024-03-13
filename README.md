@@ -14,7 +14,7 @@ python -m pip install ai2-olmo
 python -m pip install autoawq
 python -m pip install importlib-metadata
 python -m pip install auto-gptq
-// python -m pip install flash_attn
+python -m pip install flash_attn
 
 
 export CUDA_HOME=/usr/local/cuda
