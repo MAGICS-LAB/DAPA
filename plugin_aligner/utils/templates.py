@@ -7,18 +7,19 @@ LLAMA2_PROMPT_no_sys = {
 {instruction} [/INST] '''
 }
 
-
 Alpaca_PROMPT = {
-    "prompt": '''[INST] <<SYS>>
-    You are a helpful assistant.
-<</SYS>>
+    "prompt": '''Below is an instruction that describes a task. Write a response that appropriately completes the request.
 
-{instruction} [/INST] '''
+### Instruction:
+{instruction}
+
+### Response:'''
 }
 
-
+# add an empty line
 Luna_PROMPT = {
     "prompt": '''USER: {instruction}
+    
 ASSISTANT:'''
 }
 
@@ -29,15 +30,27 @@ tulu_PROMPT = {
 '''
 }
 
+# revised
 vicuna_PROMPT = {
-    "prompt": '''A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: {instruction} ASSISTANT:
-    '''
+   "prompt": '''A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions.
+  
+USER: {instruction}
+ASSISTANT:'''
 }
 
-WizardLM_PROMPT = {
-    "prompt": '''### Human: {instruction}
-### Assistant:'''
+# revised - (WizardLM-13B-V1.2)
+WizardLM_PROMPT_1 = {
+    "prompt": '''A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: {instruction} Assistant:'''
 }
+
+# revised - (WizardLM-7B-V1.0-Uncensored-GGML)
+WizardLM_PROMPT_2 = {
+    "prompt": '''You are a helpful AI assistant.
+
+USER: {instruction}
+ASSISTANT'''
+}
+
 
 MPT_PROMPT = {
     "prompt": '''A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.
