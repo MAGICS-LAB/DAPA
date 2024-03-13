@@ -21,20 +21,6 @@ def replace(args):
                 trust_remote_code=True,
             ).half().cuda()
   
-  # This model need true_remote_code = false to run without error
-  # if args.target_model == "amc-madalin/OLMo-1B-instruct-alpaca_amc":
-  #   target_model = AutoModelForCausalLM.from_pretrained(
-  #                 args.target_model,
-  #                 low_cpu_mem_usage=True,
-  #             ).half().cuda()
-  
-  # This model might need to use this init to run. Need full GPU memory to test out
-  # if args.target_model == "TheBloke/Yi-34B-200K-DARE-megamerge-v8-GPTQ":
-  #   model = AutoModelForCausalLM.from_pretrained(args.target_model,
-  #                                              device_map="auto",
-  #                                              low_cpu_mem_usage=True,
-  #                                              trust_remote_code=False,
-  #                                              revision="main").cuda()
   
   if args.update_layer:
     original_model = AutoModelForCausalLM.from_pretrained(
@@ -48,9 +34,6 @@ def replace(args):
       
       print("---------------original_model------------------")
       print(original_model.__dict__)
-      del original_model
-      del target_model
-      pass
         
     print("---------------Updating the model------------------")
 
@@ -60,7 +43,6 @@ def replace(args):
     if any(ele in args.aligement_model for ele in model_layers_type):
       num_model_layers = len(original_model.model.layers)
       layers = get_mlp_layers(args.aligement_model)
-      print(layers)
       for i in layers:
         original_lm_head_weights = original_model.model.layers[i].mlp
         target_model.model.layers[i].mlp = original_lm_head_weights
@@ -68,7 +50,6 @@ def replace(args):
     elif any(ele in args.aligement_model for ele in transformer_h_type):
       num_model_layers = len(original_model.transformer.h)
       layers = get_mlp_layers(args.aligement_model)
-      print(layers)
       for i in layers:
         original_lm_head_weights = original_model.transformer.h[i].mlp
         target_model.transformer.h[i].mlp = original_lm_head_weights
@@ -76,17 +57,13 @@ def replace(args):
     elif any(ele in args.aligement_model for ele in transformer_blocks_type):
       num_model_layers = len(original_model.transformer.blocks)
       layers = get_mlp_layers(args.aligement_model)
-      print(layers)
       for i in layers:
         original_lm_head_weights = original_model.transformer.blocks[i].ffn
         target_model.transformer.blocks[i].ffn = original_lm_head_weights
     
     elif 'OLMo' in args.aligement_model:
-      print(original_model.model)
-      print(target_model.model.transformer)
       num_model_layers = len(original_model.model.transformer.blocks)
       layers = get_mlp_layers(args.aligement_model)
-      print(layers)
       for i in layers:
         original_lm_head_weights = original_model.model.transformer.blocks[i].ff_out
         target_model.model.transformer.blocks[i].ff_out = original_lm_head_weights
