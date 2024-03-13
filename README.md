@@ -4,12 +4,17 @@ pip3 install torch torchvision torchaudio
 python -m pip install transformers
 python -m pip install openai
 python -m pip install pandas
-python -m pip installaccelerate
+python -m pip install einops
+python -m pip install accelerate
 python -m pip install sentencepiece
 python -m pip install protobuf
 python -m pip install transformers_stream_generator
 python -m pip install tiktoken
-// python -m pip installflash_attn
+python -m pip install ai2-olmo
+python -m pip install autoawq
+python -m pip install importlib-metadata
+python -m pip install auto-gptq
+python -m pip install flash_attn
 
 
 export CUDA_HOME=/usr/local/cuda

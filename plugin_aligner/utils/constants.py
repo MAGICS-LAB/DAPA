@@ -22,18 +22,39 @@ def get_black_list():
 
 
 def get_mlp_layers(name):
-    if 'Llama-2' in name:
-        return list(range(12,19))
-    elif 'vicuna' in name:
-        return list(range(11,19))
-    elif 'mpt' in name:
-        return list(range(8,17))
-    elif 'falcon' in name:
-        return list(range(8,17))
-    elif 'Mistral' in name:
-        return list(range(8,19))
-    elif 'Qwen1.5' in name:
-        return list(range(8,19))
-    elif 'Qwen' in name:
-        return list(range(8,19))
+    name_lower = name.lower()
+    if 'llama-2' in name_lower:
+        if '7b' in name_lower:
+            return list(range(12,19))
+    elif 'vicuna' in name_lower:
+        if '13b' in name_lower:
+            return list(range(11,19))
+    elif 'mpt' in name_lower:
+        if '7b' in name_lower:
+            return list(range(8,19))
+    elif 'falcon' in name_lower:
+        if '7b' in name_lower:
+            return list(range(8,19))
+    elif 'mistral' in name_lower:
+        if '7b' in name_lower:
+            return list(range(8,19))
+    elif 'qwen1.5' in name_lower:
+        if '7b' in name_lower:
+            return list(range(8,19))
+    elif 'qwen' in name_lower:
+        if '7b' in name_lower:
+            return list(range(8,19))
+    elif 'olmo' in name_lower:
+        if '7b' in name_lower:
+            return list(range(8,19))
+    elif 'yi' in name_lower:
+        if '6b' in name_lower:
+            return list(range(8,19))
+    elif 'deepseek' in name_lower:
+        if '7b' in name_lower:
+            return list(range(8,19))
+    elif 'gemma' in name_lower:
+        if '7b' in name_lower:
+            return list(range(8,19))
+    
     

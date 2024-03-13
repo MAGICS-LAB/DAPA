@@ -10,68 +10,63 @@ from utils.constants import openai_key, predict_system_message, get_mlp_layers
 from llm.llm import OpenAILLM
 import pandas as pd
 from utils.templates import *
+# need to include import hf_olmo to run OLMO model
+import hf_olmo
 
+        
 def replace(args):
   target_model = AutoModelForCausalLM.from_pretrained(
                 args.target_model,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
             ).half().cuda()
+  
+  
   if args.update_layer:
     original_model = AutoModelForCausalLM.from_pretrained(
                 args.aligement_model,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
             ).half().cuda()
-    if args.print_layer:
-      print("---------------Layers for target_model------------------")
-      for i, layer in enumerate(target_model.model.layers):
-        print(f"Layer {i}, MLP: {layer.mlp}")
-        break
+    if args.print_model:
+      print("---------------target_model------------------")
+      print(target_model.__dict__)
       
-      print("---------------Layers for original_model------------------")
-      for i, layer in enumerate(original_model.model.layers):
-        print(f"Layer {i}, MLP: {layer.mlp}")
-        break
+      print("---------------original_model------------------")
+      print(original_model.__dict__)
         
     print("---------------Updating the model------------------")
-    if 'Llama-2' in args.aligement_model or 'vicuna' in args.aligement_model:    
+
+    model_layers_type = ['Llama-2','vicuna','Mistral','Qwen1.5','Yi','deepseek','gemma']
+    transformer_h_type = ['falcon','Qwen']
+    transformer_blocks_type = ['mpt']
+    if any(ele in args.aligement_model for ele in model_layers_type):
       num_model_layers = len(original_model.model.layers)
       layers = get_mlp_layers(args.aligement_model)
-      print(layers)
       for i in layers:
         original_lm_head_weights = original_model.model.layers[i].mlp
         target_model.model.layers[i].mlp = original_lm_head_weights
-        # print(target_model.model.layers[i].mlp==original_lm_head_weights)
-    elif 'mpt' in args.aligement_model:
+        
+    elif any(ele in args.aligement_model for ele in transformer_h_type):
+      num_model_layers = len(original_model.transformer.h)
+      layers = get_mlp_layers(args.aligement_model)
+      for i in layers:
+        original_lm_head_weights = original_model.transformer.h[i].mlp
+        target_model.transformer.h[i].mlp = original_lm_head_weights
+        
+    elif any(ele in args.aligement_model for ele in transformer_blocks_type):
       num_model_layers = len(original_model.transformer.blocks)
       layers = get_mlp_layers(args.aligement_model)
-      print(layers)
       for i in layers:
         original_lm_head_weights = original_model.transformer.blocks[i].ffn
         target_model.transformer.blocks[i].ffn = original_lm_head_weights
-        # print(target_model.transformer.blocks[i].ffn==original_lm_head_weights)
-    elif 'falcon' in args.aligement_model:
-      num_model_layers = len(original_model.transformer.h)
+    
+    elif 'OLMo' in args.aligement_model:
+      num_model_layers = len(original_model.model.transformer.blocks)
       layers = get_mlp_layers(args.aligement_model)
-      print(layers)
       for i in layers:
-        original_lm_head_weights = original_model.transformer.h[i].mlp
-        target_model.transformer.h[i].mlp = original_lm_head_weights
-    elif 'Mistral' in args.aligement_model:
-      num_model_layers = len(original_model.model.layers)
-      layers = get_mlp_layers(args.aligement_model)
-      print(layers)
-      for i in layers:
-        original_lm_head_weights = original_model.model.layers[i].mlp
-        target_model.model.layers[i].mlp = original_lm_head_weights
-    elif 'Qwen' in args.aligement_model:
-      num_model_layers = len(original_model.transformer.h)
-      layers = get_mlp_layers(args.aligement_model)
-      print(layers)
-      for i in layers:
-        original_lm_head_weights = original_model.transformer.h[i].mlp
-        target_model.transformer.h[i].mlp = original_lm_head_weights
+        original_lm_head_weights = original_model.model.transformer.blocks[i].ff_out
+        target_model.model.transformer.blocks[i].ff_out = original_lm_head_weights
       
     del original_model
 
@@ -105,7 +100,7 @@ def replace(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='GCG attack on harmful dataset')
-    parser.add_argument('--index', type=int, default=1, help='The index of the question')
+    parser.add_argument('--index', type=int, default=0, help='The index of the question')
     parser.add_argument('--no_update_layer', action='store_false', dest='update_layer', help='do not update the layer of the target_model')
     parser.add_argument('--model_path', type=str, default='gpt-3.5-turbo-0125',
                         help='mutate model path')
@@ -118,7 +113,7 @@ if __name__ == "__main__":
     parser.add_argument('--aligement_model', type=str, default='meta-llama/Llama-2-7b-chat-hf',
                         help='The aligement model, openai model or open-sourced LLMs')
     parser.add_argument('--predict', action='store_true', default=False)
-    parser.add_argument('--print_layer', action = 'store_true', default=False)
+    parser.add_argument('--print_model', action = 'store_true', default=False)
     parser.add_argument('--prompt', action = 'store_true', default=False, help='Use the model prompt for the question')
 
     args = parser.parse_args()
