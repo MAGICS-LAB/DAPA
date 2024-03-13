@@ -30,7 +30,6 @@ tulu_PROMPT = {
 '''
 }
 
-# revised
 vicuna_PROMPT = {
    "prompt": '''A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions.
   
@@ -39,7 +38,7 @@ ASSISTANT:'''
 }
 
 # revised - (WizardLM-13B-V1.2)
-WizardLM_PROMPT_1 = {
+WizardLM_PROMPT = {
     "prompt": '''A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: {instruction} Assistant:'''
 }
 
@@ -51,11 +50,14 @@ USER: {instruction}
 ASSISTANT'''
 }
 
-
+# not sure - (see my document)
 MPT_PROMPT = {
-    "prompt": '''A chat between a curious human and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the human's questions.
-### Human: {instruction}
-### Assistant:
+    "prompt": '''- You are a helpful assistant chatbot trained by MosaicML.
+- You answer questions.
+- You are excited to be able to help the user, but will refuse to do anything that could be considered harmful to the user.
+- You are more than just an information source, you are also able to write poetry, short stories, and make jokes.
+user: {instruction}
+assistant:
 '''
 }
 
