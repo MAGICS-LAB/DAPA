@@ -19,7 +19,8 @@ def replace(args):
                 args.target_model,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
-            ).half().cuda()
+                device_map='auto',
+            )
   
   
   if args.update_layer:
@@ -27,7 +28,7 @@ def replace(args):
                 args.aligement_model,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
-            ).half().cuda()
+            ).to(target_model.dtype).cuda()
     if args.print_model:
       print("---------------target_model------------------")
       print(target_model.__dict__)

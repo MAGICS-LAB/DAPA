@@ -1,5 +1,4 @@
 LLAMA2_chat_PROMPT = {
-    "description": "Llama 2 chat one shot prompt",
     "prompt": '''[INST] <<SYS>>
 You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.
 
@@ -18,7 +17,6 @@ Assistant:
 mistral_chat_PROMPT = { "prompt": '''[INST] {instruction} [/INST]'''}
 
 MPT_chat_PROMPT = {
-    "description": "MPT 7B chat one shot prompt",
     "prompt": '''<|im_start|>system
 - You are a helpful assistant chatbot trained by MosaicML.
 - You answer questions.
@@ -31,7 +29,6 @@ MPT_chat_PROMPT = {
 }
 
 GEMMA_chat_PROMPT = {
-    "description": "GEMMA 7B chat one shot prompt",
     "prompt": '''<start_of_turn>user
 {instruction}<end_of_turn>
 <start_of_turn>model
@@ -39,7 +36,6 @@ GEMMA_chat_PROMPT = {
 }
 
 QWEN_chat_PROMPT = {
-    "description": "Qwen 7B chat prompt",
     "prompt": '''<|im_start|>system
 You are a helpful assistant.<|im_end|>
 <|im_start|>user
@@ -79,7 +75,6 @@ mistral_chat_PROMPT = { "prompt": '''[INST] {instruction} [/INST]'''}
 
 
 LLAMA2_PROMPT_no_sys = {
-    "description": "Llama 2 prompt without system message",
     "prompt": '''[INST] <<SYS>>
 
 <</SYS>>
