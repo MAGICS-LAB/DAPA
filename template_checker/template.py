@@ -129,6 +129,22 @@ MISTRAL_7B_PROMPT = {
     "prompt": '''<s>[INST] {instruction} [/INST]'''
 }
 
+# mark - mar.14
+Yi_34B_200K_Dare_megamerge_v8_AWQ_PROMPT = {
+    "prompt": '''SYSTEM: {system_message}
+USER: {prompt}
+ASSISTANT:
+'''
+}
+
+# mark - mar.14, same as the previous one
+Yi_34B_200K_Dare_megamerge_v8_GPTQ_PROMPT = {
+    "prompt": '''SYSTEM: {system_message}
+USER: {prompt}
+ASSISTANT:
+'''
+}
+
 def get_templates(model_path, func):
     if 'Llama-2' in model_path:
         if func == 'no_sys':
