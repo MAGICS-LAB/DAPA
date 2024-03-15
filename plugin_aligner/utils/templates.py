@@ -119,10 +119,11 @@ ASSISTANT:'''
 }
 
 Chinese_alpaca_2_7b_PROMPT = {
-    "[INST] <<SYS>>\n"
-    "{You are a helpful assistant. 你是一个乐于助人的助手。请你提供专业、有逻辑、内容真实、有价值的详细回复。}\n"
-    "<</SYS>>\n\n"
-    "{instruction} [/INST]"
+    "prompt": '''[INST] <<SYS>>
+    You are a helpful assistant. 你是一个乐于助人的助手。请你提供专业、有逻辑、内容真实、有价值的详细回复。
+    <</SYS>>
+
+    {instruction} [/INST]'''
 }
 
 
