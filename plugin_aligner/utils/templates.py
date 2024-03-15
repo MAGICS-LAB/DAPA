@@ -224,7 +224,31 @@ You are a helpful assistant.<|im_end|>
 forest_prompt = { "prompt": '''[INST] {instruction} [/INST]'''}
 
 
-
+def get_chat_template(name):
+    if 'Llama-2' in name:
+        return LLAMA2_chat_PROMPT
+    elif 'falcon' in name:
+        return Falcon_chat_PROMPT
+    elif 'OLMo' in name:
+        return olmo_chat_PROMPT
+    elif 'deepseek' in name:
+        return deepseek_chat_prompt
+    elif 'vicuna' in name:
+        return vicuna_PROMPT
+    elif 'gemma' in name:
+        return GEMMA_chat_PROMPT
+    elif 'Mistral' in name:
+        return mistral_chat_PROMPT
+    elif 'mpt' in name:
+        return MPT_chat_PROMPT
+    elif 'Qwen' in name:
+        return QWEN_chat_PROMPT
+    elif 'Qwen1.5' in name:
+        return qwen_15_chat_PROMPT
+    elif 'Yi' in name:
+        return Yi_chat_PROMPT
+    
+    
 
 
 

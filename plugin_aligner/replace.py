@@ -74,8 +74,12 @@ def replace(args):
   origin_question = pd.read_csv(args.dataset_path)['text'].tolist()[args.index]
   
   if args.prompt:
-    template = get_template(args.target_model)
-    question = template['prompt'].format(instruction=origin_question)
+    if args.test_alignment:
+      template = get_chat_template(args.target_model)
+      question = template['prompt'].format(instruction=origin_question)
+    else:
+      template = get_template(args.target_model)
+      question = template['prompt'].format(instruction=origin_question)
   else: 
     question = origin_question + " Sure,"
   print("The question is: \n", question)
@@ -96,7 +100,7 @@ def replace(args):
   else: 
     result = 0
     print("The response is :\n", response)
-  return response, result
+  return question, response, result
 
 
 if __name__ == "__main__":
@@ -109,6 +113,7 @@ if __name__ == "__main__":
                         help='The target unaligement model, openai model or open-sourced LLMs')
     parser.add_argument("--add_eos", action='store_true')
     parser.add_argument('--dataset_path', type=str, default='../Dataset/harmful.csv')
+    parser.add_argument('--test_alignment', action='store_true', default=False)
     parser.add_argument("--eos_num", type=int, default=10)
     parser.add_argument('--output_dict', type=str, default= './Results2/')
     parser.add_argument('--aligement_model', type=str, default='meta-llama/Llama-2-7b-chat-hf',
@@ -119,9 +124,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     args.openai_key = openai_key
-    response, result = replace(args)
+    question, response, result = replace(args)
 
-    df = pd.DataFrame({'Success': [result], 'Response': [response]}, index=[0])
+    df = pd.DataFrame({'Question':[question], 'Success': [result], 'Response': [response]}, index=[0])
 
     # save the optim prompts into a csv file
     save_path = args.output_dict + f'{args.target_model}/GPTFuzzer/{args.index}.csv'
