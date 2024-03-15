@@ -22,7 +22,6 @@ def replace(args):
                 device_map='auto',
             )
   
-  
   if args.update_layer:
     original_model = AutoModelForCausalLM.from_pretrained(
                 args.aligement_model,
@@ -95,11 +94,13 @@ def replace(args):
   # changed max_token to max_new_token to better control output token length
   generate_ids = target_model.generate(inputs.input_ids, max_new_tokens = 150)
   response = tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+  print("The response is :\n", response)
   if args.predict:
     result = predictor.predict([response], origin_question)[0]
+    print("ChatGPT's result is ", result)
   else: 
     result = 0
-    print("The response is :\n", response)
+  
   return question, response, result
 
 
@@ -126,7 +127,7 @@ if __name__ == "__main__":
     args.openai_key = openai_key
     question, response, result = replace(args)
 
-    df = pd.DataFrame({'Question':[question], 'Success': [result], 'Response': [response]}, index=[0])
+    df = pd.DataFrame({'Question':[question], 'Response': [response], 'Success': [result]}, index=[0])
 
     # save the optim prompts into a csv file
     save_path = args.output_dict + f'{args.target_model}/GPTFuzzer/{args.index}.csv'
@@ -137,6 +138,6 @@ if __name__ == "__main__":
     # check if the directory exists
     if not os.path.exists(os.path.dirname(save_path)):
         os.makedirs(os.path.dirname(save_path))
-    df.to_csv(save_path)
+    df.to_csv(save_path, index=False)
 
     
