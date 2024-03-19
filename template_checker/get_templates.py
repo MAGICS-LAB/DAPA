@@ -29,7 +29,7 @@ def chat_templates(model_path, func):
     
     
 if __name__ == "__main__":
-    template = chat_templates('mistralai/Mistral-7B-Instruct-v0.2', 'chat')
+    template = chat_templates('macadeliccc/gemma-orchid-7b-dpo', 'chat')
     print(template)
     print("Converting new line to \\n")
     print(template.replace('\n', '\\n'))
