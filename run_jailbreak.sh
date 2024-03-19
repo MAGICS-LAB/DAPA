@@ -1,7 +1,7 @@
-#!/bin/bash --login
+#!/bin/bash
 
 source activate base
-conda activate /home/user/miniconda3/envs/jailbreak
+conda activate jailbreak
 PYTHON_SCRIPT="./plugin_aligner/replace.py"
 MODEL_PATH="meta-llama/Llama-2-7b-chat-hf"
 DATASET_PATH="./Dataset/harmful.csv"
@@ -25,10 +25,10 @@ fi
 
 # Determine the length of harmful.csv
 LENGTH=$(wc -l < $DATASET_PATH)
-
+echo "Start Running run_jailbreak.sh"
 # Run replace.py for each index from 0 to LENGTH - 1
 for (( index=0; index<LENGTH-1; index++ )); do
-    /home/user/miniconda3/envs/jailbreak/bin/python3.9 $PYTHON_SCRIPT --alignment_model $MODEL_PATH --target_model $MODEL_PATH --dataset_path $DATASET_PATH --no_update_layer --prompt --test_alignment --predict --index $index > "${LOG_PATH}/${index}.log" 2>&1 &
+    python $PYTHON_SCRIPT --alignment_model $MODEL_PATH --target_model $MODEL_PATH --dataset_path $DATASET_PATH --no_update_layer --prompt --test_alignment --predict --index $index > "${LOG_PATH}/${index}.log" 2>&1 &
     sleep 25
 done
 
