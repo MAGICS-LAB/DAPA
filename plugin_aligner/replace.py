@@ -13,14 +13,16 @@ from utils.templates import *
 # need to include import hf_olmo to run OLMO model
 import hf_olmo
 
+os.environ['HF_HOME'] = "/projects/p32013/.cache/"
+
         
 def replace(args):
   target_model = AutoModelForCausalLM.from_pretrained(
                 args.target_model,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
-                device_map='auto',
-            )
+                # device_map='auto',
+            ).cuda()
   
   if args.update_layer:
     original_model = AutoModelForCausalLM.from_pretrained(
@@ -93,8 +95,8 @@ def replace(args):
   # Generate
   # changed max_token to max_new_token to better control output token length
   generate_ids = target_model.generate(inputs.input_ids, max_new_tokens = 350)
-  response = tokenizer.batch_decode(generate_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)[0]
-  response = response.replace(question,"")
+  response = tokenizer.batch_decode(generate_ids[len(inputs.input_ids):], skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+  #response = response.replace(question,"")
   print("The response is :\n", response)
   if args.predict:
     result = predictor.predict([response], origin_question)[0]

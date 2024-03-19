@@ -3,7 +3,7 @@
 source activate base
 conda activate jailbreak
 PYTHON_SCRIPT="./plugin_aligner/replace.py"
-MODEL_PATH="meta-llama/Llama-2-7b-chat-hf"
+MODEL_PATH="deepseek-ai/deepseek-llm-7b-chat"
 DATASET_PATH="./Dataset/harmful.csv"
 ADD_EOS=False
 # Set the log path based on ADD_EOS
@@ -15,6 +15,23 @@ fi
 
 # Create the log directory if it does not exist
 mkdir -p "$LOG_PATH"
+
+export HF_TOKEN='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'
+#export HF_HOME="/projects/p32013/.cache/"
+
+# Function to find the first available GPU
+find_free_gpu() {
+    for i in {0..1}; do
+        free_mem=$(nvidia-smi -i $i --query-gpu=memory.free --format=csv,noheader,nounits | awk '{print $1}')
+        if [ "$free_mem" -ge 70000 ]; then
+            echo $i
+            return
+        fi
+    done
+
+    echo "-1" # Return -1 if no suitable GPU is found
+}
+
 
 # Conditional flag for ADD_EOS
 ADD_EOS_FLAG=""
@@ -28,8 +45,21 @@ LENGTH=$(wc -l < $DATASET_PATH)
 echo "Start Running run_jailbreak.sh"
 # Run replace.py for each index from 0 to LENGTH - 1
 for (( index=0; index<LENGTH-1; index++ )); do
-    python $PYTHON_SCRIPT --alignment_model $MODEL_PATH --target_model $MODEL_PATH --dataset_path $DATASET_PATH --no_update_layer --prompt --test_alignment --predict --index $index > "${LOG_PATH}/${index}.log" 2>&1 &
-    sleep 25
+    FREE_GPU=-1
+
+    # Keep looping until a free GPU is found
+    while [ $FREE_GPU -eq -1 ]; do
+        FREE_GPU=$(find_free_gpu)
+        if [ $FREE_GPU -eq -1 ]; then
+            sleep 5 # Wait for 5 seconds before trying to find a free GPU again
+        fi
+    done
+
+    (CUDA_VISIBLE_DEVICES=$FREE_GPU python $PYTHON_SCRIPT --alignment_model $MODEL_PATH --target_model $MODEL_PATH --dataset_path $DATASET_PATH --no_update_layer --prompt --test_alignment --predict --index $index > "${LOG_PATH}/${index}.log" 2>&1 &
+    echo "Task $index on GPU $FREE_GPU finished."
+    ) &
+
+    sleep 25 # Wait for 25 seconds before starting the next task
 done
 
 echo "Finished Running run_jailbreak.sh"
