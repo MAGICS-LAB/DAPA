@@ -21,7 +21,7 @@ export HF_TOKEN='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'
 
 # Function to find the first available GPU
 find_free_gpu() {
-    for i in {0..1}; do
+    for i in {0..3}; do
         free_mem=$(nvidia-smi -i $i --query-gpu=memory.free --format=csv,noheader,nounits | awk '{print $1}')
         if [ "$free_mem" -ge 70000 ]; then
             echo $i
