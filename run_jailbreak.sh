@@ -3,7 +3,7 @@
 source activate base
 conda activate jailbreak
 PYTHON_SCRIPT="./plugin_aligner/replace.py"
-MODEL_PATH="deepseek-ai/deepseek-llm-7b-chat"
+MODEL_PATH="01-ai/Yi-34B-Chat"
 DATASET_PATH="./Dataset/harmful.csv"
 ADD_EOS=False
 # Set the log path based on ADD_EOS
@@ -17,19 +17,31 @@ fi
 mkdir -p "$LOG_PATH"
 
 export HF_TOKEN='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'
+# only uncommand this in Quest server
 #export HF_HOME="/projects/p32013/.cache/"
 
 # Function to find the first available GPU
+# find_free_gpu() {
+#     for i in {0..3}; do
+#         free_mem=$(nvidia-smi -i $i --query-gpu=memory.free --format=csv,noheader,nounits | awk '{print $1}')
+#         if [ "$free_mem" -ge 80000 ]; then
+#             echo $i
+#             return
+#         fi
+#     done
+
+#     echo "-1" # Return -1 if no suitable GPU is found
+# }
+
 find_free_gpu() {
-    for i in {0..3}; do
-        free_mem=$(nvidia-smi -i $i --query-gpu=memory.free --format=csv,noheader,nounits | awk '{print $1}')
-        if [ "$free_mem" -ge 70000 ]; then
+    for i in {0..1}; do
+        if nvidia-smi -i $i | grep 'No running processes found' > /dev/null; then
             echo $i
             return
         fi
     done
 
-    echo "-1" # Return -1 if no suitable GPU is found
+    echo "-1" # Return -1 if no free GPU is found
 }
 
 
@@ -44,7 +56,7 @@ fi
 LENGTH=$(wc -l < $DATASET_PATH)
 echo "Start Running run_jailbreak.sh"
 # Run replace.py for each index from 0 to LENGTH - 1
-for (( index=0; index<LENGTH-1; index++ )); do
+for (( index=46; index<LENGTH-1; index++ )); do
     FREE_GPU=-1
 
     # Keep looping until a free GPU is found
