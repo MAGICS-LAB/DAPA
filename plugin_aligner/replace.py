@@ -83,7 +83,7 @@ def replace(args):
       question = template['prompt'].format(instruction=origin_question)
   else: 
     question = origin_question + " Sure,"
-  #print("The question is: \n", question)
+  print("The question is: \n", question)
 
   predictor = OpenAILLM(args.model_path, args.openai_key, system_message=predict_system_message.format(origin_question=origin_question))
   # huggingface generate 

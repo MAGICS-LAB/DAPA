@@ -3,7 +3,7 @@
 # source activate base
 # conda activate jailbreak
 PYTHON_SCRIPT="./plugin_aligner/replace.py"
-MODEL_PATH="Qwen/Qwen1.5-0.5B-Chat"
+MODEL_PATH="Qwen/Qwen1.5-14B-Chat"
 DATASET_PATH="./Dataset/harmful.csv"
 ADD_EOS=False
 # Set the log path based on ADD_EOS
@@ -33,7 +33,7 @@ export HF_TOKEN='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'
 # }
 
 find_free_gpu() {
-    for i in {2..3}; do
+    for i in {0..1}; do
         if nvidia-smi -i $i | grep 'No running processes found' > /dev/null; then
             echo $i
             return
