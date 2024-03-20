@@ -25,7 +25,7 @@ def get_mlp_layers(name):
     name_lower = name.lower()
     if 'llama-2' in name_lower:
         if '7b' in name_lower:
-            return list(range(12,19))
+            return list(range(7,19))
     elif 'vicuna' in name_lower:
         if '13b' in name_lower:
             return list(range(11,19))
