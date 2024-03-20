@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source activate base
-conda activate jailbreak
+# source activate base
+# conda activate jailbreak
 PYTHON_SCRIPT="./plugin_aligner/replace.py"
-MODEL_PATH="01-ai/Yi-34B-Chat"
+MODEL_PATH="Qwen/Qwen1.5-0.5B-Chat"
 DATASET_PATH="./Dataset/harmful.csv"
 ADD_EOS=False
 # Set the log path based on ADD_EOS
@@ -17,8 +17,7 @@ fi
 mkdir -p "$LOG_PATH"
 
 export HF_TOKEN='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'
-# only uncommand this in Quest server
-#export HF_HOME="/projects/p32013/.cache/"
+# export HF_HOME="/projects/p32013/.cache/"
 
 # Function to find the first available GPU
 # find_free_gpu() {
@@ -34,7 +33,7 @@ export HF_TOKEN='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'
 # }
 
 find_free_gpu() {
-    for i in {0..1}; do
+    for i in {2..3}; do
         if nvidia-smi -i $i | grep 'No running processes found' > /dev/null; then
             echo $i
             return
@@ -56,7 +55,7 @@ fi
 LENGTH=$(wc -l < $DATASET_PATH)
 echo "Start Running run_jailbreak.sh"
 # Run replace.py for each index from 0 to LENGTH - 1
-for (( index=46; index<LENGTH-1; index++ )); do
+for (( index=0; index<LENGTH-1; index++ )); do
     FREE_GPU=-1
 
     # Keep looping until a free GPU is found
