@@ -3,7 +3,7 @@
 # source activate base
 # conda activate jailbreak
 PYTHON_SCRIPT="./plugin_aligner/replace.py"
-MODEL_PATH="Qwen/Qwen1.5-4B-Chat"
+MODEL_PATH="Qwen/Qwen1.5-14B-Chat"
 DATASET_PATH="./Dataset/harmful.csv"
 ADD_EOS=False
 # Set the log path based on ADD_EOS
@@ -17,9 +17,21 @@ fi
 mkdir -p "$LOG_PATH"
 
 export HF_TOKEN='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'
-export HF_HOME="/projects/p32013/.cache/"
+# export HF_HOME="/projects/p32013/.cache/"
 
 # Function to find the first available GPU
+# find_free_gpu() {
+#     for i in {0..3}; do
+#         free_mem=$(nvidia-smi -i $i --query-gpu=memory.free --format=csv,noheader,nounits | awk '{print $1}')
+#         if [ "$free_mem" -ge 80000 ]; then
+#             echo $i
+#             return
+#         fi
+#     done
+
+#     echo "-1" # Return -1 if no suitable GPU is found
+# }
+
 find_free_gpu() {
     for i in {0..1}; do
         if nvidia-smi -i $i | grep 'No running processes found' > /dev/null; then
@@ -54,7 +66,7 @@ for (( index=0; index<LENGTH-1; index++ )); do
         fi
     done
 
-    (CUDA_VISIBLE_DEVICES=$FREE_GPU /home/hlv8980/.conda/envs/jailbreak/bin/python3.9 $PYTHON_SCRIPT --alignment_model $MODEL_PATH --target_model $MODEL_PATH --dataset_path $DATASET_PATH --no_update_layer --prompt --test_alignment --predict --index $index > "${LOG_PATH}/${index}.log" 2>&1 &
+    (CUDA_VISIBLE_DEVICES=$FREE_GPU python $PYTHON_SCRIPT --alignment_model $MODEL_PATH --target_model $MODEL_PATH --dataset_path $DATASET_PATH --no_update_layer --prompt --test_alignment --predict --index $index > "${LOG_PATH}/${index}.log" 2>&1 &
     echo "Task $index on GPU $FREE_GPU finished."
     ) &
 
