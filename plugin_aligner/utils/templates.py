@@ -146,13 +146,11 @@ WizardLM_12_PROMPT = {
 h2ogpt_PROMPT = {
     "prompt": '''<|prompt|>{instruction}<|endoftext|><|answer|>'''}
 
-
+# "{instruction}\n\n### Response:"
 WizardLM_10_PROMPT = {
-    "prompt": '''You are a helpful AI assistant.
-
-    USER: <instruction>
-    ASSISTANT:
-    '''
+    "prompt": '''{instruction}
+    
+    ### Response:'''
 }
 
 falcon_sft_PROMPT = {
