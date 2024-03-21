@@ -24,7 +24,7 @@ def get_black_list():
 def get_mlp_layers(name):
     name_lower = name.lower()
     if 'llama-2' in name_lower:
-        return list(range(7,19))
+        return list(range(12,18))
     elif 'vicuna' in name_lower:
         return list(range(11,19))
     elif 'mpt' in name_lower:
