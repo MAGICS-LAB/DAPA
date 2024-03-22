@@ -1,5 +1,5 @@
 model_pairs = [{'alligened':'meta-llama/Llama-2-7b-chat-hf', 'target_model':['meta-llama/Llama-2-7b-hf', 'hfl/chinese-alpaca-2-7b', 
-                                                                              'Tap-M/Luna-AI-Llama2-Uncensored','lmsys/vicuna-7b-v1.5',
+                                                                              'lmsys/vicuna-7b-v1.5',
                                                                               'allenai/tulu-2-7b', 'allenai/tulu-2-dpo-7b']}, 
                {'alligened':'meta-llama/Llama-2-13b-chat-hf', 'target_model':['meta-llama/Llama-2-13b-hf', 'hfl/chinese-alpaca-2-13b', 
                                                                                'NousResearch/Redmond-Puffin-13B', 'WizardLM/WizardLM-13B-V1.2',
