@@ -15,6 +15,10 @@ python -m pip install autoawq
 python -m pip install importlib-metadata
 python -m pip install auto-gptq
 python -m pip install flash_attn
+pip install sympy
+pip install einops transformers_stream_generator
+pip install -U transformers
+
 
 
 export CUDA_HOME=/usr/local/cuda

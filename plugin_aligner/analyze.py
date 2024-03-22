@@ -32,7 +32,7 @@ def count_results_in_csv(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Analysis the safe rate of the model response.')
-    parser.add_argument('--directory_path', type=str, default='../Results2/meta-llama/Llama-2-7b-chat-hf/GPTFuzzer',
+    parser.add_argument('--directory_path', type=str, default='../result_unalignt/abhishekchohan/mistral-7B-forest-dpo/GPTFuzzer',
                         help='Result directory path to analysis the safe rate of the response (default: Results2/meta-llama/Llama-2-7b-chat-hf/GPTFuzzer)')
     args = parser.parse_args()
 
