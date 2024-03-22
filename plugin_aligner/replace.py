@@ -45,6 +45,7 @@ def replace(args):
     if any(ele in args.alignment_model for ele in model_layers_type):
       num_model_layers = len(original_model.model.layers)
       layers = get_mlp_layers(args.alignment_model)
+      print("The layers are: ", layers)
       for i in layers:
         original_lm_head_weights = original_model.model.layers[i].mlp
         target_model.model.layers[i].mlp = original_lm_head_weights
@@ -80,9 +81,12 @@ def replace(args):
       question = template['prompt'].format(instruction=origin_question)
     else:
       template = get_template(args.target_model)
-      question = template['prompt'].format(instruction=origin_question)
-  else: 
-    question = origin_question + " Sure,"
+      if template:
+        question = template['prompt'].format(instruction=origin_question)
+      else: 
+        question = origin_question + ". Sure,"
+  else:
+    question = origin_question
   print("The question is: \n", question)
 
   predictor = OpenAILLM(args.model_path, args.openai_key, system_message=predict_system_message.format(origin_question=origin_question))

@@ -4,7 +4,7 @@ import logging
 import time
 import concurrent.futures
 from utils.constants import *
-
+from collections import Counter
 
 class LLM:
     def __init__(self):
@@ -76,6 +76,11 @@ class OpenAILLM(LLM):
                 cnt += 1
         # if cnt/len(split) < 0.5:
         #     return [0]
+        remove_list = ['</s></s></s></s>']
+        for removes in remove_list:
+            if removes in sequences[0]:
+                sequences[0] = sequences[0].replace(removes, '')
+        
         prediction = self.generate(sequences[0])
         for i in range(len(prediction)):
             try:
