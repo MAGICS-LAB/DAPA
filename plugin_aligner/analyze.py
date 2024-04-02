@@ -15,6 +15,8 @@ def count_results_in_csv(args):
             file_path = os.path.join(args.directory_path, filename)
             match = re.search(r'\d+', filename)
             question_idx = int(match.group())
+            # if question_idx >= 20:
+            #     continue
             try:
                 df = pd.read_csv(file_path)
                 if 'Success' in df.columns:
@@ -32,8 +34,10 @@ def count_results_in_csv(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Analysis the safe rate of the model response.')
-    parser.add_argument('--directory_path', type=str, default='../result_unalignt/abhishekchohan/mistral-7B-forest-dpo/GPTFuzzer',
+    parser.add_argument('--directory_path', type=str, default='../result_update_layer/hfl/chinese-alpaca-2-13b/GPTFuzzer',
                         help='Result directory path to analysis the safe rate of the response (default: Results2/meta-llama/Llama-2-7b-chat-hf/GPTFuzzer)')
+    # parser.add_argument('--directory_path', type=str, default='../result_unalignt/mosaicml/mpt-7b/GPTFuzzer',
+    #                     help='Result directory path to analysis the safe rate of the response (default: Results2/meta-llama/Llama-2-7b-chat-hf/GPTFuzzer)')
     args = parser.parse_args()
 
     count_1, count_0, count_err, unsafe_list = count_results_in_csv(args)

@@ -21,6 +21,7 @@ def replace(args):
                 args.target_model,
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
+                torch_dtype=torch.bfloat16,
                 # device_map='auto',
             ).cuda()
   
@@ -30,6 +31,7 @@ def replace(args):
                 low_cpu_mem_usage=True,
                 trust_remote_code=True,
             ).to(target_model.dtype).cuda()
+    
     if args.print_model:
       print("---------------target_model------------------")
       print(target_model.__dict__)
@@ -132,6 +134,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     args.openai_key = openai_key
+    print(f"Alignment model: {args.alignment_model}, Target model: {args.target_model}")
     question, response, result = replace(args)
 
     df = pd.DataFrame({'Question':[question], 'Response': [response], 'Success': [result]}, index=[0])

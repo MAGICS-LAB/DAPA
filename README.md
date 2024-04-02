@@ -14,12 +14,11 @@ python -m pip install ai2-olmo
 python -m pip install autoawq
 python -m pip install importlib-metadata
 python -m pip install auto-gptq
-python -m pip install flash_attn
 pip install sympy
 pip install einops transformers_stream_generator
 pip install -U transformers
 
-
+<!-- python -m pip install flash_attn can't install-->
 
 export CUDA_HOME=/usr/local/cuda
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64

@@ -10,3 +10,4 @@ rome/
 representation-engineering/
 !Dataset/*.csv
 GCG/
+plugin_aligner/cot/

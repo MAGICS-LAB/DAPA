@@ -254,7 +254,8 @@ def get_chat_template(name):
 
 def get_template(name):
     if 'Llama-2' in name:
-        return LLAMA2_PROMPT_no_sys
+        # return LLAMA2_PROMPT_no_sys
+        return None
     elif 'chinese-alpaca' in name:
         return Chinese_alpaca_2_7b_PROMPT
     elif 'Redmond-Puffin' in name:
