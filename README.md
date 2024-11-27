@@ -1,4 +1,5 @@
 ## Install Command
+```
 conda create --name jailbreak python=3.9.18
 pip3 install torch torchvision torchaudio
 python -m pip install transformers
@@ -28,3 +29,4 @@ export PATH=/usr/local/cuda/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.
 
 ## Run Command
 python replace.py --target_model meta-llama/Llama-2-7b-hf
+```
