@@ -68,4 +68,30 @@ python plugin_aligner/replace.py --target_model meta-llama/Llama-2-7b-hf
 
 ## License
 See LICENSE file for details.
+
+## 7. Citation
+
+If you have any question regarding our paper or codes, please feel free to start an issue.
+
+If you use DAPA in your work, please kindly cite our paper:
+
+**DAPA**
+
 ```
+@misc{luo2024decoupledalignmentrobustplugandplay,
+      title={Decoupled Alignment for Robust Plug-and-Play Adaptation}, 
+      author={Haozheng Luo and Jiahao Yu and Wenxin Zhang and Jialong Li and Jerry Yao-Chieh Hu and Xinyu Xing and Han Liu},
+      year={2024},
+      eprint={2406.01514},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2406.01514}, 
+}
+```
+
+## 8.Acknowledgement
+We appreciate the following GitHub repos a lot for their valuable code and efforts.
+- GPTFuzz (https://github.com/sherdencooper/GPTFuzz)
+- ROME (https://github.com/kmeng01/rome)
+- JailbreakBench(https://github.com/JailbreakBench/jailbreakbench)
+- Chain-of-Actions(https://github.com/MAGICS-LAB/Chain-of-Actions)
