@@ -93,5 +93,5 @@ If you use DAPA in your work, please kindly cite our paper:
 We appreciate the following GitHub repos a lot for their valuable code and efforts.
 - GPTFuzz (https://github.com/sherdencooper/GPTFuzz)
 - ROME (https://github.com/kmeng01/rome)
-- JailbreakBench(https://github.com/JailbreakBench/jailbreakbench)
-- Chain-of-Actions(https://github.com/MAGICS-LAB/Chain-of-Actions)
+- JailbreakBench (https://github.com/JailbreakBench/jailbreakbench)
+- Chain-of-Actions (https://github.com/MAGICS-LAB/Chain-of-Actions)
